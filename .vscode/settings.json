@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "font8x8_basic.h": "c",
+        "i2c.h": "c",
+        "compare": "cpp",
+        "cstdint": "cpp",
+        "gpio.h": "c",
+        "freertos.h": "c",
+        "sys.h": "c",
+        "queue.h": "c",
+        "*.ipp": "c",
+        "netfwd": "c"
+    }
+}
