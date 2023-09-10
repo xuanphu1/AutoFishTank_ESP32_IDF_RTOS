@@ -49,6 +49,7 @@
 
 __attribute__((unused)) static const char *TAG_main = "Main";
 __attribute__((unsued)) static const char *TAG_wifi = "Wifi";
+__attribute__((unsued)) static const char *TAG_bme280 = "BME280";
 
 #define PERIOD_GET_DATA_FROM_SENSOR (TickType_t)(5000 / portTICK_RATE_MS)
 
@@ -191,11 +192,15 @@ void Wifi_initMode_STA(void)
 // }
 
 void getDataFromSensor_task(void *argument){
-    struct dataSensor_st dataSensorTemp ;   
+    struct dataSensor_st dataSensorTemp ;
+    struct moduleError_st moduleErrorTemp;
 
 #if CONFIG_USING_BME280
-    esp_err_t bme280error = bme280_readSensorData(  &bme280_device,&(dataSensorTemp.environment_temperature),
-                                                    &(dataSensorTemp.humidity),&(dataSensorTemp.pressure));
+    moduleErrorTemp.bme280Error = bme280_readSensorData(&bme280_device,&(dataSensorTemp.environment_temperature),
+                                                        &(dataSensorTemp.humidity),&(dataSensorTemp.pressure)); 
+    if (moduleErrorTemp.bme280Error != ESP_OK){
+        ESP_LOGE(TAG_bme280,"Read data from sensor failed");
+    }                                                        
 #endif
 
 
