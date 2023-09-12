@@ -38,10 +38,9 @@ struct statusDevice_st
 
 struct moduleError_st
 {
-    uint64_t timestamp;
     esp_err_t ds3231Error;
     esp_err_t bme280Error;
-    esp_err_t d18b20Error;
+    esp_err_t ds18b20Error;
 };
 
 

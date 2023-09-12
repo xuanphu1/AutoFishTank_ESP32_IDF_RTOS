@@ -9,6 +9,22 @@
         "sys.h": "c",
         "queue.h": "c",
         "*.ipp": "c",
-        "netfwd": "c"
+        "netfwd": "c",
+        "event_groups.h": "c",
+        "task.h": "c",
+        "i2cdev.h": "c",
+        "bmp280.h": "c",
+        "bme280.h": "c",
+        "ssd1306.h": "c",
+        "devicemanager.h": "c",
+        "datamanager.h": "c",
+        "ds18b20.h": "c",
+        "owb.h": "c",
+        "owb_rmt.h": "c",
+        "err.h": "c",
+        "spi_common.h": "c",
+        "esp_event_base.h": "c",
+        "nvs_flash.h": "c",
+        "uart.h": "c"
     }
 }
