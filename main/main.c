@@ -43,21 +43,59 @@
 #include "font8x8_basic.h"
 #include "DeviceManager.h"
 #include "datamanager.h"
-#include "ds18b20.h"
-#include "owb.h"
-#include "owb_rmt.h"
+#include "../component/esp32_ds18b20/include/ds18b20.h"
+#include "../component/esp32_owb/owb.h"
+#include "../component/esp32_owb/owb_rmt.h"
 #include "ds3231.h"
+#include "../component/motor/servo/iot_servo.h"
+#include "sdkconfig.h"
 
 /*------------------------------------------DEFINE--------------------------------------------*/
 
-__attribute__((unused)) static const char *TAG_main = "Main";
-__attribute__((unsued)) static const char *TAG_wifi = "Wifi";
-__attribute__((unsued)) static const char *TAG_bme280 = "BME280";
-__attribute__((unsued)) static const char *TAG_ds18b20 = "DS18B20";
+// // Device using
+// #define CONFIG_USING_RTC            (1)
+// #define CONFIG_USING_BME280         (1)
+// #define CONFIG_USING_DS18B20        (1)
+// #define CONFIG_USING_SSD1306        (1)
 
-#define PERIOD_GET_DATA_FROM_SENSOR (TickType_t)(5000 / portTICK_RATE_MS)
+// // Wifi configuration Menu
+// #define CONFIG_SSID                 "unknown"
+// #define CONFIG_PASSWORD             "bat4glenmadung"
+// #define CONFIG_MAXIMUM_RETRY_CONNECT_WIFI (10)
 
-#define NO_WAIT (TickType_t)(0)
+// // Auto configuration menu
+// #define CONFIG_ON_OFF_AUTO          (1)
+// #define CONFIG_HOUR_TURN_ON_MOTOR   (20)
+// #define CONFIG_HOUR_TURN_ON_LIGHT   (20)
+// #define CONFIG_TEMPERATURE_TURN_ON_FAN     (29)
+// #define CONFIG_TEMPERATURE_TURN_ON_HEATER  (25)
+// #define CONFIG_LOGIC_STATE_LIGHT          (1)
+// #define CONFIG_LOGIC_STATE_FAN            (0)
+// #define CONFIG_LOGIC_STATE_HEATER         (0)
+// #define CONFIG_LOGIC_STATE_MOTOR          (0)
+
+// // GPIO configuration
+// #define CONFIG_ONE_WIRE_GPIO (12)
+// #define CONFIG_GPIO_LIGHT    (32)
+// #define CONFIG_GPIO_FAN      (33)
+// #define CONFIG_GPIO_HEATER   (25)
+// #define CONFIG_GPIO_CHANNEL_MOTOR   (13)
+
+
+
+
+#define TAG_main  "Main"
+#define TAG_wifi  "Wifi"
+#define TAG_bme280 "BME280"
+#define TAG_ds18b20 "DS18B20"
+#define TAG_ssd1306 "SSD1306"
+#define TAG_ds3231 "DS3231"
+
+#define PERIOD_GET_DATA_FROM_SENSOR (TickType_t)(3000 / portTICK_RATE_MS)
+#define PERIOD_DATA_DISPAY (TickType_t)(1000 / portTICK_RATE_MS)
+#define PERIOD_ON_OFF_SERVICE (TickType_t)(1000 / portTICK_RATE_MS)
+
+#define NO_WAIT ((TickType_t)0)
 #define WAIT_10_TICK (TickType_t)(10 / portTICK_RATE_MS)
 #define WAIT_100_TICK (TickType_t)(100 / portTICK_RATE_MS) 
 
@@ -73,7 +111,8 @@ EventGroupHandle_t taskCompletionEventGroup;
 esp_mqtt_client_handle_t mqttClient_handle = NULL;
 
 TaskHandle_t getDataFromSensorTask_handle = NULL ;
-TaskHandle_t displayData_SSD1306 = NULL ;
+TaskHandle_t allocateDatatoDisplay_task_handle = NULL ;
+TaskHandle_t allocateDatatoUsingLightMotorFanHeater_handle = NULL;
 
 SemaphoreHandle_t getDataSensor_semaphore = NULL;
 SemaphoreHandle_t sentDataToMQTT_semaphore = NULL;
@@ -89,14 +128,20 @@ static struct statusDevice_st statusDevice = {0};
 
 
 static int s_retry_num = 0 ;
+int center, top, bottom;
+char lineChar[20];
 
+// bool logicStateLight = CONFIG_LOGIC_STATE_LIGHT ;
+// bool logicStateFan = CONFIG_LOGIC_STATE_FAN ;
+// bool logicStateHeater = CONFIG_LOGIC_STATE_HEATER ;
+// bool logicStateMotor = CONFIG_LOGIC_STATE_MOTOR ;
 /*------------------------------------------------------------------------------------------------------------------------*/
 
 i2c_dev_t ds3231_device ;
 SSD1306_t SSD1306_device ;
 bmp280_t bme280_device ;
 bmp280_params_t bme280_params ;
-struct DS18B20_Info * ds18b20_info;
+const DS18B20_Info *ds18b20_info;
 struct tm Time ;
 
 
@@ -192,60 +237,55 @@ void Wifi_initMode_STA(void)
     vEventGroupDelete(s_wifi_event_group);
 }
 
-
-// void displayData_SSD1306(void *argument){
-    
-// }
-
 void getDataFromSensor_task(void *argument){
     struct dataSensor_st dataSensorTemp ;
     struct moduleError_st moduleErrorTemp;
-    
+    TickType_t task_lastWakeTime = xTaskGetTickCount();  
     while (1)
     {
 
 #if (CONFIG_USING_RTC)
-    moduleErrorTemp.ds3231Error = ds3231_get_time(&ds3231_device,&Time);
-    if (moduleErrorTemp.ds3231Error != ESP_OK) {
-        ESP_LOGE(TAG_ds18b20,"Read data from DS3231 failed") 
-    } else {
-        ESP_LOGI(TAG_ds18b20,"Read data from DS3231 successfull")
-    }
+        moduleErrorTemp.ds3231Error = ds3231_get_time(&ds3231_device,&Time);
+        if (moduleErrorTemp.ds3231Error != ESP_OK) {
+            ESP_LOGE(TAG_ds3231,"Read data from DS3231 failed") ;
+        } else {
+            ESP_LOGI(TAG_ds3231,"Read data from DS3231 successfull");
+        }
 #endif
 
 
 
 #if (CONFIG_USING_BME280)
-    moduleErrorTemp.bme280Error = bme280_readSensorData(&bme280_device,&(dataSensorTemp.environment_temperature),
-                                                        &(dataSensorTemp.humidity),&(dataSensorTemp.pressure)); 
-
-#if (CONFIG_USING_D18B20)
-    moduleErrorTemp.ds18b20Error = ds18b20_read_temp(ds18b20_info, &dataSensorTemp.water_temperature)
-    if (moduleErrorTemp.ds18b20Error != ESP_OK) {
-        ESP_LOGE(TAG_ds18b20,"Read data from DS18B20 failed") 
-    } else {
-        ESP_LOGI(TAG_ds18b20,"Read data from DS18B20 successfull")
-    }
+        moduleErrorTemp.bme280Error = bme280_readSensorData(&bme280_device,&(dataSensorTemp.environment_temperature),
+                                                            &(dataSensorTemp.humidity),&(dataSensorTemp.pressure)); 
+#endif
+#if (CONFIG_USING_DS18B20)
+        moduleErrorTemp.ds18b20Error = ds18b20_read_temp(ds18b20_info, &dataSensorTemp.water_temperature);
+        if (moduleErrorTemp.ds18b20Error != ESP_OK) {
+            ESP_LOGE(TAG_ds18b20,"Read data from DS18B20 failed") ;
+        } else {
+            ESP_LOGI(TAG_ds18b20,"Read data from DS18B20 successfull");
+        }
 #endif
 
-    ESP_ERROR_CHECK_WITHOUT_ABORT(moduleErrorTemp.bme280Error);
-    ESP_ERROR_CHECK_WITHOUT_ABORT(moduleErrorTemp.ds18b20Error);
+        ESP_ERROR_CHECK_WITHOUT_ABORT(moduleErrorTemp.bme280Error);
+        ESP_ERROR_CHECK_WITHOUT_ABORT(moduleErrorTemp.ds18b20Error);
 
-    ESP_LOGI(__func__, "Read data from sensors completed!");
+        ESP_LOGI(__func__, "Read data from sensors completed!");
 
-    if (xSemaphoreTake(allocateDataToMQTTandSDQueue_semaphore, portMAX_DELAY) == pdPASS)        
-    {
-        if(xQueueSendToBack(dataSensorIntermediate_queue, (void *)&dataSensorTemp, WAIT_10_TICK * 5) != pdPASS){
-            ESP_LOGE(__func__,"Failed to send the data sensor to dataSensorIntermidiate_queue");
-        } else {
-            ESP_LOGI(__func__,"Successfull to send the data sensor to dataSensorIntermidiate_queue");
+        if (xSemaphoreTake(allocateDataToMQTTandSDQueue_semaphore, portMAX_DELAY) == pdPASS)        
+        {
+            if(xQueueSendToBack(dataSensorIntermediate_queue, (void *)&dataSensorTemp, WAIT_10_TICK * 5) != pdPASS){
+                ESP_LOGE(__func__,"Failed to send the data sensor to dataSensorIntermidiate_queue");
+            } else {
+                ESP_LOGI(__func__,"Successfull to send the data sensor to dataSensorIntermidiate_queue");
+            }
         }
-    }
-    xSemaphoreGive(allocateDataToMQTTandSDQueue_semaphore);
+        xSemaphoreGive(allocateDataToMQTTandSDQueue_semaphore);
 
-    memset(&dataSensorTemp, 0, sizeof(struct dataSensor_st));
-    memset(&moduleErrorTemp, 0, sizeof(struct moduleError_st));
-    vTaskDelayUntil(&task_lastWakeTime, PERIOD_GET_DATA_FROM_SENSOR);
+        memset(&dataSensorTemp, 0, sizeof(struct dataSensor_st));
+        memset(&moduleErrorTemp, 0, sizeof(struct moduleError_st));
+        vTaskDelayUntil(&task_lastWakeTime, PERIOD_GET_DATA_FROM_SENSOR);
     }
 };
 
@@ -255,93 +295,203 @@ void allocateDatatoDisplay_task(void *argument){
     char Humidity[20] , Temprature_environment[20], Temprature_water[20];
     while (1)
     {
-        if(uxQueueMessagesWaiting(dataSensorIntermidiate_queue) != 0){
-           if(xQueueReceive(dataSensorIntermidate_queue, (void*)&dataSensorReceiveFromQueue, portMAX_DELAY) != pdPASS){
+        if(uxQueueMessagesWaiting(dataSensorIntermediate_queue) != 0){
+           if(xQueueReceive(dataSensorIntermediate_queue, (void*)&dataSensorReceiveFromQueue, portMAX_DELAY) != pdPASS){
             ESP_LOGE(__func__,"Failed to receive data from dataSensorIntermidiate_queue");
            }else {
             ESP_LOGI(__func__,"Successfull to receive data from dataSensorIntermidiate_queue");
            }
             sprintf(Temprature_water,"Temp_2:%0.2f",dataSensorReceiveFromQueue.water_temperature);
-            sprintf(Temprature_environment,"Temp:%0.2f",dataSenorReceiveFromQueue.environment_temperature);
-            sprintf(Humidity."Humid:%0.2f",dataSenorReceiveFromQueue.humidity);
+            sprintf(Temprature_environment,"Temp:%0.2f",dataSensorReceiveFromQueue.environment_temperature);
+            sprintf(Humidity,"Humid:%0.2f",dataSensorReceiveFromQueue.humidity);
             ssd1306_display_text(&SSD1306_device,0,Temprature_environment,10, false);
             ssd1306_display_text(&SSD1306_device,1,Humidity,11, false);
             ssd1306_display_text(&SSD1306_device,2,Temprature_water,12, false);
         }
+        vTaskDelay(PERIOD_DATA_DISPAY);
     }
 }
 
 void allocateDatatoUsingLightMotorFanHeater(void *arugment){
     struct dataSensor_st dataSensorReceiveFromQueue ;
-    char Auto_system[20], stateAutoSystem[3];
-    char Auto_light_fan[20], stateAutoLight[3], stateAutoFan[3];
-    char Auto_heater_feed[20], stateAutoHeater[3], stateAutoFeed[3]; 
+    char Auto_system[20], stateAutoSystem[4];
+    char Auto_light_fan[20], stateAutoLight[4], stateAutoFan[4];
+    char Auto_heater_feed[20], stateAutoHeater[4], stateAutoFeed[4]; 
 
     while (1)
     {
-    if(CONFIG_ON_OFF_AUTO_LIGHT){
-        // ssd1306_clear_line(&SSD1306_device,4,false);
-        stateAutoSystem = "ON";
-    } else {
-        // ssd1306_clear_line(&SSD1306_device,4,false);
-        stateAutoSystem = "OFF";
+        if(uxQueueMessagesWaiting(dataSensorIntermediate_queue) != 0){
+            if(xQueueReceive(dataSensorIntermediate_queue, (void*)&dataSensorReceiveFromQueue, portMAX_DELAY) != pdPASS){
+                #if(CONFIG_ON_OFF_AUTO)
+                    // ssd1306_clear_line(&SSD1306_device,4,false);
+                    strcpy(stateAutoSystem,"ON");
+                #else 
+                    // ssd1306_clear_line(&SSD1306_device,4,false);
+                    strcpy(stateAutoSystem,"OFF");
+                #endif   
+
+                sprintf(Auto_system,"Auto : %s",stateAutoSystem);
+
+                ssd1306_display_text(&SSD1306_device,4,Auto_system,10,false);
+                #if (CONFIG_ON_OFF_AUTO)
+                    sprintf(Auto_light_fan,"L: %dh | F: %dC ",CONFIG_HOUR_TURN_ON_LIGHT,CONFIG_TEMPERATURE_TURN_ON_FAN);
+                    sprintf(Auto_heater_feed,"M: %dh | H: %dC ",CONFIG_HOUR_TURN_ON_MOTOR,CONFIG_TEMPERATURE_TURN_ON_HEATER);
+
+                    ssd1306_display_text(&SSD1306_device,5,Auto_light_fan,16,false);
+                    ssd1306_display_text(&SSD1306_device,6,Auto_heater_feed,16,false);
+
+                    if (Time.tm_hour == CONFIG_HOUR_TURN_ON_MOTOR)
+                    {
+                    for (float i = 0 ; i <= 180 ; i++){
+                        iot_servo_write_angle(LEDC_LOW_SPEED_MODE,CONFIG_GPIO_CHANNEL_MOTOR,i);
+                    }
+                    for (float i = 180 ; i >=0 ;i--){
+                        iot_servo_write_angle(LEDC_LOW_SPEED_MODE,CONFIG_GPIO_CHANNEL_MOTOR,i);
+                    }
+                    }
+
+                    if (Time.tm_hour == CONFIG_HOUR_TURN_ON_LIGHT)
+                    {
+                        
+                        gpio_set_level(CONFIG_GPIO_LIGHT,true);
+                    }
+
+                    if(dataSensorReceiveFromQueue.water_temperature > CONFIG_TEMPERATURE_TURN_ON_FAN){
+                        gpio_set_level(CONFIG_GPIO_FAN,true);
+                    }
+                    
+
+                    if(dataSensorReceiveFromQueue.environment_temperature < CONFIG_TEMPERATURE_TURN_ON_HEATER){
+                        gpio_set_level(CONFIG_GPIO_HEATER,true);
+                    }
+                #else 
+                    
+                    if (CONFIG_LOGIC_STATE_LIGHT){
+                        strcpy(stateAutoLight,"ON");
+                        gpio_set_level(CONFIG_GPIO_LIGHT,CONFIG_LOGIC_STATE_LIGHT);
+                    }
+                    else{
+                        strcpy(stateAutoLight,"OFF");
+                        gpio_set_level(CONFIG_GPIO_LIGHT,CONFIG_LOGIC_STATE_LIGHT);
+                    }
+
+                    if (CONFIG_LOGIC_STATE_FAN){
+                        strcpy(stateAutoFan,"ON");
+                        // Set up state logic of fan
+                        gpio_set_level(CONFIG_GPIO_FAN,CONFIG_LOGIC_STATE_FAN);
+                    }
+                    else{
+                        strcpy(stateAutoFan,"OFF");
+                        // Set up state logic of fan
+                        gpio_set_level(CONFIG_GPIO_FAN,CONFIG_LOGIC_STATE_FAN);
+                    }
+                        
+
+                    if(CONFIG_LOGIC_STATE_HEATER){
+                        strcpy(stateAutoHeater,"ON");
+                        // Set up state logic of heater
+                        gpio_set_level(CONFIG_GPIO_HEATER,CONFIG_LOGIC_STATE_HEATER);
+                    }
+                    else{
+                        strcpy(stateAutoHeater,"OFF");
+                        // Set up state logic of heater
+                        gpio_set_level(CONFIG_GPIO_HEATER,CONFIG_LOGIC_STATE_HEATER);
+                    }
+                        
+                    if(CONFIG_LOGIC_STATE_MOTOR){
+                        strcpy(stateAutoFeed,"ON");
+                        while (CONFIG_LOGIC_STATE_MOTOR)
+                    {
+                        for (float i = 0 ; i <= 180 ; i++){
+                        iot_servo_write_angle(LEDC_LOW_SPEED_MODE,CONFIG_GPIO_CHANNEL_MOTOR,i);
+                        }
+                        for (float i = 180 ; i >=0 ;i--){
+                            iot_servo_write_angle(LEDC_LOW_SPEED_MODE,CONFIG_GPIO_CHANNEL_MOTOR,i);
+                        }
+                    }
+                    }
+                    else{
+                        strcpy(stateAutoFeed,"OFF");
+                    }
+                    sprintf(Auto_light_fan,"L: %s | F: %s",stateAutoLight,stateAutoFan);
+                    sprintf(Auto_heater_feed,"M: %s | H: %s",stateAutoFeed,stateAutoHeater);
+
+                    ssd1306_display_text(&SSD1306_device,5,Auto_light_fan,15,false);
+                    ssd1306_display_text(&SSD1306_device,6,Auto_heater_feed,15,false);
+                    // Set up state logic of light 
+
+                #endif
+
+            } 
         }
-
-    sprintf(Auto_system,"Auto : %c");
-    sprintf(Auto_light_fan,"L : %dh F 0.1%f C: ",CONFIG_HOUR_ON_LIGHT,CONFIG_TEMPRATURE_ON_FAN);
-
-    ssd1306_display_text(&SSD1306_device,4,Auto_system,false);
-#if (CONFIG_ON_OFF_AUTO_LIGHT)
-    
-    ssd1306_display_text();
-    ssd1306_display_text();
-    if (Time.tm_hour == CONFIG_HOUR_ON_LIGHT)
-    {
-        
-        gpio_set_level(CONFIG_GPIO_LIGHT,true);
-    }
-
-    if(dataSensorReceiveFromQueue.water_temperature > CONFIG_TEMPRATURE_ON_FAN){
-        gpio_set_level(CONFIG_GPIO_FAN,true);
-    }
-
-    if(dataSensorReceiveFromQueue.environment_temprature < CONFIG_TEMPRATURE_ON_HEATER){
-        gpio_set_level(CONFIG_GPIO_HEATER,true);
-    }
-    
-
-
-
-#else
-
-    // Set up state logic of light 
-    gpio_set_level(CONFIG_GPIO_LIGHT,CONFIG_STATE_LIGHT);
-    // Set up state logic of fan
-    gpio_set_level(CONFIG_GPIO_FAN,CONFIG_STATE_FAN);
-    // Set up state logic of heater
-    gpio_set_level(CONFIG_GPIO_HEATER,CONFIG_STATE_HEATER);
-
-
-#endif
-        
-    }
-    
+        vTaskDelay(PERIOD_ON_OFF_SERVICE);
+    }    
 }
 
 void app_main(void)
 {
+
+// Allow other core to finish initialization
+    vTaskDelay(pdMS_TO_TICKS(200));
+
 /*-----------------------------------------Initialize NVS-------------------------*/
     esp_err_t nvs_error = nvs_flash_init();
     if (nvs_error == ESP_ERR_NVS_NO_FREE_PAGES || nvs_error == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
       nvs_error = nvs_flash_init();
     }
-    ESP_ERROR_CHECK(nvs_error);
+    ESP_ERROR_CHECK_WITHOUT_ABORT(nvs_error);
+/*-----------------------------------------Initialize MG996----------------------*/
 
+servo_config_t servo_config = {
+    .max_angle = 180,
+        .min_width_us = 500,
+        .max_width_us = 2500,
+        .freq = 50,
+        .timer_number = LEDC_TIMER_0,
+        .channels = {
+            .servo_pin = {          
+                CONFIG_GPIO_CHANNEL_MOTOR,
+            },
+            .ch = {
+                LEDC_CHANNEL_6,
+            },
+        },
+        .channel_number = 1,
+};
+ESP_ERROR_CHECK_WITHOUT_ABORT(iot_servo_init(LEDC_LOW_SPEED_MODE,&servo_config));
+
+
+/*-----------------------------------------Initialize SSD1306----------------------*/
+#if (CONFIG_USING_SSD1306)
+
+    
+	ESP_LOGI(TAG_ssd1306, "INTERFACE is i2c");
+	ESP_LOGI(TAG_ssd1306, "CONFIG_SDA_GPIO=%d",CONFIG_SDA_GPIO);
+	ESP_LOGI(TAG_ssd1306, "CONFIG_SCL_GPIO=%d",CONFIG_SCL_GPIO);
+	ESP_LOGI(TAG_ssd1306, "CONFIG_RESET_GPIO=%d",CONFIG_RESET_GPIO);
+	i2c_master_init(&SSD1306_device, CONFIG_SDA_GPIO, CONFIG_SCL_GPIO, CONFIG_RESET_GPIO);
+
+#if CONFIG_FLIP
+	SSD1306_device._flip = true;
+	ESP_LOGW(TAG_ssd1306, "Flip upside down");
+#endif
+
+#if CONFIG_SSD1306_128x64
+	ESP_LOGI(TAG_ssd1306, "Panel is 128x64");
+    ESP_LOGI(TAG_ssd1306,"Initialize SSD1306 ");
+	ssd1306_init(&SSD1306_device, 128, 64);
+#endif
+
+ssd1306_clear_screen(&SSD1306_device, false);
+	ssd1306_contrast(&SSD1306_device, 0xff);
+#endif
 /*-----------------------------------------Initialize BME280-----------------------*/
 #if (CONFIG_USING_BME280)
         // Initialize I2C
+
     ESP_ERROR_CHECK_WITHOUT_ABORT(i2cdev_init());
+    ESP_LOGI(TAG_bme280, "Initialize BME280 sensor(I2C/Wire%d).", CONFIG_BME_I2C_PORT);
 
     // Initialize BME280
     ESP_ERROR_CHECK_WITHOUT_ABORT(bme280_init(  &bme280_device, &bme280_params, BME280_ADDRESS, 
@@ -355,6 +505,7 @@ void app_main(void)
 
     // Khởi tạo và cấu hình giao tiếp 1-Wire
     owb_rmt_driver_info rmt_driver_info;
+    ESP_LOGI(TAG_ds18b20,"Initialize DS18B20 sensor (one/Wire %d)",CONFIG_ONE_WIRE_GPIO);
     OneWireBus * owb = owb_rmt_initialize(&rmt_driver_info, CONFIG_ONE_WIRE_GPIO, RMT_CHANNEL_1, RMT_CHANNEL_0);
     owb_use_crc(owb, true);  // Bật kiểm tra CRC cho mã ROM
 
@@ -367,17 +518,39 @@ void app_main(void)
 #endif
     
 /*-----------------------------------------Initialize GPIO-----------------------*/
-    gpio_pad_select_gpio(CONFIG_GPIO_LIGHT);
-    gpio_set_direction(CONFIG_GPIO_LIGHT,GPIO_MODE_OUPUT);
+gpio_pad_select_gpio(CONFIG_GPIO_LIGHT);
+gpio_set_direction(CONFIG_GPIO_LIGHT, GPIO_MODE_OUTPUT);
 
-    gpio_pad_select_gpio(CONFIG_GPIO_FAN);
-    gpio_set_direction(CONFIG_GPIO_FAN,GPIO_MODE_OUPUT);
-    
-    gpio_pad_select_gpio(CONFIG_GPIO_HEATER);
-    gpio_set_direction(CONFIG_GPIO_HEATER,GPIO_MODE_OUPUT);
-    
+gpio_pad_select_gpio(CONFIG_GPIO_FAN);
+gpio_set_direction(CONFIG_GPIO_FAN, GPIO_MODE_OUTPUT);
+
+gpio_pad_select_gpio(CONFIG_GPIO_HEATER);
+gpio_set_direction(CONFIG_GPIO_HEATER, GPIO_MODE_OUTPUT);
+
+/*-----------------------------------------Initialize WIFI-----------------------*/
 #if (CONFIG_USING_WIFI)
-ESP_LOGI(TAG_wifi, "ESP_WIFI_MODE_STA");
-Wifi_initMode_STA();
+    ESP_LOGI(TAG_wifi, "ESP_WIFI_MODE_STA");
+    Wifi_initMode_STA();
 #endif
+
+/*-----------------------------------------Initialize Queue-----------------------*/
+dataSensorIntermediate_queue = xQueueCreate(30, sizeof(struct dataSensor_st));
+while (dataSensorIntermediate_queue == NULL)
+{
+    ESP_LOGE(__func__, "Create dataSensorIntermediate Queue failed.");
+    ESP_LOGI(__func__, "Retry to create dataSensorIntermediate Queue...");
+    vTaskDelay(500 / portTICK_RATE_MS);
+    dataSensorIntermediate_queue = xQueueCreate(30, sizeof(struct dataSensor_st));
+};
+ESP_LOGI(__func__, "Create dataSensorIntermediate Queue success.");
+
+
+/*-----------------------------------------Create task freertos-----------------------*/
+
+xTaskCreate(getDataFromSensor_task,"Get data from sensor",(1024*16),NULL,(UBaseType_t)25,&getDataFromSensorTask_handle);
+
+xTaskCreate(allocateDatatoDisplay_task,"Display data",(1024*16),NULL,(UBaseType_t)20,&allocateDatatoDisplay_task_handle);
+
+xTaskCreate(allocateDatatoUsingLightMotorFanHeater,"Data using on off function",(1024*16),NULL,(UBaseType_t)20,&allocateDatatoUsingLightMotorFanHeater_handle);
+
 }

@@ -133,12 +133,42 @@ CONFIG_PARTITION_TABLE_MD5=y
 # end of Partition Table
 
 #
-# Wifi config Menu
+# Device using
 #
-CONFIG_SSID="unknown"
-CONFIG_PASSWORD="bat4glenmadung"
+CONFIG_USING_WIFI=y
+CONFIG_USING_RTC=y
+CONFIG_USING_BME280=y
+CONFIG_USING_DS18B20=y
+CONFIG_USING_SSD1306=y
+# end of Device using
+
+#
+# Wifi configuration Menu
+#
+CONFIG_SSID="Vinh Than"
+CONFIG_PASSWORD="0987110001"
 CONFIG_MAXIMUM_RETRY_CONNECT_WIFI=10
-# end of Wifi config Menu
+# end of Wifi configuration Menu
+
+#
+# Auto configuration menu
+#
+# CONFIG_ON_OFF_AUTO is not set
+CONFIG_LOGIC_STATE_LIGHT=1
+CONFIG_LOGIC_STATE_FAN=1
+CONFIG_LOGIC_STATE_HEATER=0
+CONFIG_LOGIC_STATE_MOTOR=0
+# end of Auto configuration menu
+
+#
+# GPIO configuration
+#
+CONFIG_ONE_WIRE_GPIO=12
+CONFIG_GPIO_LIGHT=32
+CONFIG_GPIO_FAN=33
+CONFIG_GPIO_HEATER=25
+CONFIG_GPIO_CHANNEL_MOTOR=13
+# end of GPIO configuration
 
 #
 # BME configuration
@@ -161,6 +191,7 @@ CONFIG_RTC_I2C_FREQ_HZ=400000
 #
 # SSD1306 Configuration
 #
+CONFIG_I2C_MASTER_FREQ_HZ=400000
 CONFIG_GPIO_RANGE_MAX=33
 CONFIG_I2C_INTERFACE=y
 # CONFIG_SPI_INTERFACE is not set

@@ -1,5 +1,12 @@
 menu "SSD1306 Configuration"
 
+	config I2C_MASTER_FREQ_HZ
+		int "I2C_MASTER_FREQ_HZ"
+		default 400000
+		range 0 400000
+		help
+			Set up freq kHz
+
 	config GPIO_RANGE_MAX
 		int
 		default 33 if IDF_TARGET_ESP32

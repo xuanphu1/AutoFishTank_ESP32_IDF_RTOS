@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:\\Espressif\\frameworks\\esp-idf-v4.4.5/**",
-                "C:/Espressif/frameworks/esp-idf-v4.4.5/components/esp_hw_support/include"
+                "C:/Espressif/frameworks/esp-idf-v4.4.5/components/esp_hw_support/include",
+                "C:\\Espressif\\frameworks\\esp-idf-v4.4.5\\components\\hal\\include\\hal"
             ],
             "defines": [
                 "_DEBUG",

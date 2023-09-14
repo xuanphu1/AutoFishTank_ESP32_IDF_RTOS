@@ -30,7 +30,7 @@ struct dataSensor_st
 
 const char dataSensor_templateSaveToSDCard[] = "%s,%0.2f,%0.2f,%0.2f,%d,%d,%d";
 
-const char dataSensor_templateDisplaySSD1306 = "%0.2f,%0.2f";
+const char dataSensor_templateDisplaySSD1306[] = "%0.2f,%0.2f";
 
 
 #endif

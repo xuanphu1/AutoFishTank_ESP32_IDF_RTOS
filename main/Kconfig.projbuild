@@ -1,20 +1,159 @@
-menu "Wifi config Menu"
+menu "Device using"
+    config USING_WIFI
+        bool "USING_WIFI"
+        default y
+        help
+            enabled or disabled using wifi
+    config USING_RTC
+        bool "USING_RTC"
+        default y
+        help 
+            enabled or disabled using DS3231
+    
+    config USING_BME280
+        bool "USING_BME280"
+        default y
+        help
+            enabled or disabled using BME280
+
+    config USING_DS18B20
+        bool "USING_DS18B20"
+        default y
+        help
+            enabled or disabled using DS18B20
+
+    config USING_SSD1306
+        bool "USING_SSD1306"
+        default y
+        help
+            enabled or disabled using ssd1306
+endmenu
+    
+    
+menu "Wifi configuration Menu"
     config SSID
         string "SSID"
         default "unknown"
-        help 
+        help
             SSID.
 
     config PASSWORD
         string "PASSWORD"
         default "bat4glenmadung"
-        help 
+        help
             PASSWORD
 
     config MAXIMUM_RETRY_CONNECT_WIFI
         int "MAXIMUM_RETRY_CONNECT_WIFI"
         default 10
-        help    
+        help
             Maximum number of reconnections wifi
-            
+
 endmenu
+
+menu "Auto configuration menu"
+    config ON_OFF_AUTO
+        bool "ON_OFF_AUTO"
+        default y
+        help
+            ON or OFF automatic control
+
+    config HOUR_TURN_ON_MOTOR
+        int "HOUR_TURN_ON_MOTOR"
+        default 20
+        range 0 23
+        depends on ON_OFF_AUTO
+        help
+            Set the hour at which the light should be turned on when automatic control enabled
+
+    config HOUR_TURN_ON_LIGHT
+        int "HOUR_TURN_ON_LIGHT"
+        default 20
+        range 0 23
+        depends on ON_OFF_AUTO
+        help
+            Set the hour at which the light should be turned on when automatic control enabled
+
+    config TEMPERATURE_TURN_ON_FAN
+        int "TEMPERATURE_TURN_ON_FAN"
+        default 29
+        depends on ON_OFF_AUTO
+        help
+            Set the Temperature at which the fan should be turned on which automatic control enabled
+
+    config TEMPERATURE_TURN_ON_HEATER
+        int "TEMPERATURE_TURN_ON_HEATER"
+        default 25
+        depends on ON_OFF_AUTO
+        help
+            Set the Temperature at which the heater should be turned on which automatic control enabled
+
+    config LOGIC_STATE_LIGHT
+        int "State of the light"
+        default 0
+        range 0 1
+        depends on !ON_OFF_AUTO
+        help
+            Set the initial state of the light when automatic light control is disabled.
+
+    config LOGIC_STATE_FAN
+        int "State of the fan"
+        default 0
+        range 0 1
+        depends on !ON_OFF_AUTO
+        help
+            Set the initial state of the fan when automatic light control is disabled.
+
+    config LOGIC_STATE_HEATER
+        int "State of the heater"
+        default 0
+        range 0 1
+        depends on !ON_OFF_AUTO
+        help
+            Set the initial state of the heater when automatic light control is disabled.
+
+    config LOGIC_STATE_MOTOR
+        int "State of the motor"
+        default 0
+        range 0 1
+        depends on !ON_OFF_AUTO
+        help
+            Set the initial state of the heater when automatic light control is disabled.
+endmenu
+
+
+menu "GPIO configuration"
+
+    config ONE_WIRE_GPIO
+        int "ONE_WIRE_GPIO"
+        default 12
+        help
+            Set gpio using ds18b20
+
+    config GPIO_LIGHT
+        int "CONFIG_GPIO_LIGHT"
+        default 32
+        help 
+            Set gpio using light
+
+    config GPIO_FAN
+        int "CONFIG_GPIO_FAN"
+        default 33
+        help
+            Set gpio using fan
+    
+    config GPIO_HEATER
+        int "CONFIG_GPIO_HEATER"
+        default 25
+        help
+            Set gpio using heater
+
+    config GPIO_CHANNEL_MOTOR
+        int "GPIO_CHANNEL_MOTOR"
+        default 13
+        help
+            Set gpio using servo
+
+endmenu
+
+

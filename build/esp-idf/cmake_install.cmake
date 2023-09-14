@@ -130,6 +130,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DataManager/cmake_install.cmake")
   include("C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DeviceManager/cmake_install.cmake")
   include("C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/Time/cmake_install.cmake")
+  include("C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/esp32_owb/cmake_install.cmake")
+  include("C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/esp32_ds18b20/cmake_install.cmake")
   include("C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/ssd1306/cmake_install.cmake")
 
 endif()

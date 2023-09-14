@@ -2062,6 +2062,64 @@
             {
                 "children": [],
                 "depends_on": null,
+                "help": "enabled or disabled using wifi",
+                "id": "USING_WIFI",
+                "name": "USING_WIFI",
+                "range": null,
+                "title": "USING_WIFI",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "enabled or disabled using DS3231",
+                "id": "USING_RTC",
+                "name": "USING_RTC",
+                "range": null,
+                "title": "USING_RTC",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "enabled or disabled using BME280",
+                "id": "USING_BME280",
+                "name": "USING_BME280",
+                "range": null,
+                "title": "USING_BME280",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "enabled or disabled using DS18B20",
+                "id": "USING_DS18B20",
+                "name": "USING_DS18B20",
+                "range": null,
+                "title": "USING_DS18B20",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "enabled or disabled using ssd1306",
+                "id": "USING_SSD1306",
+                "name": "USING_SSD1306",
+                "range": null,
+                "title": "USING_SSD1306",
+                "type": "bool"
+            }
+        ],
+        "depends_on": null,
+        "id": "device-using",
+        "title": "Device using",
+        "type": "menu"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "depends_on": null,
                 "help": "SSID.",
                 "id": "SSID",
                 "name": "SSID",
@@ -2091,8 +2149,171 @@
             }
         ],
         "depends_on": null,
-        "id": "wifi-config-menu",
-        "title": "Wifi config Menu",
+        "id": "wifi-configuration-menu",
+        "title": "Wifi configuration Menu",
+        "type": "menu"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
+                        "depends_on": "ON_OFF_AUTO",
+                        "help": "Set the hour at which the light should be turned on when automatic control enabled",
+                        "id": "HOUR_TURN_ON_MOTOR",
+                        "name": "HOUR_TURN_ON_MOTOR",
+                        "range": [
+                            0,
+                            23
+                        ],
+                        "title": "HOUR_TURN_ON_MOTOR",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "ON_OFF_AUTO",
+                        "help": "Set the hour at which the light should be turned on when automatic control enabled",
+                        "id": "HOUR_TURN_ON_LIGHT",
+                        "name": "HOUR_TURN_ON_LIGHT",
+                        "range": [
+                            0,
+                            23
+                        ],
+                        "title": "HOUR_TURN_ON_LIGHT",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "ON_OFF_AUTO",
+                        "help": "Set the Temperature at which the fan should be turned on which automatic control enabled",
+                        "id": "TEMPERATURE_TURN_ON_FAN",
+                        "name": "TEMPERATURE_TURN_ON_FAN",
+                        "range": null,
+                        "title": "TEMPERATURE_TURN_ON_FAN",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "ON_OFF_AUTO",
+                        "help": "Set the Temperature at which the heater should be turned on which automatic control enabled",
+                        "id": "TEMPERATURE_TURN_ON_HEATER",
+                        "name": "TEMPERATURE_TURN_ON_HEATER",
+                        "range": null,
+                        "title": "TEMPERATURE_TURN_ON_HEATER",
+                        "type": "int"
+                    }
+                ],
+                "depends_on": null,
+                "help": "ON or OFF automatic control",
+                "id": "ON_OFF_AUTO",
+                "name": "ON_OFF_AUTO",
+                "range": null,
+                "title": "ON_OFF_AUTO",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": "!ON_OFF_AUTO",
+                "help": "Set the initial state of the light when automatic light control is disabled.",
+                "id": "LOGIC_STATE_LIGHT",
+                "name": "LOGIC_STATE_LIGHT",
+                "range": null,
+                "title": "State of the light",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": "!ON_OFF_AUTO",
+                "help": "Set the initial state of the fan when automatic light control is disabled.",
+                "id": "LOGIC_STATE_FAN",
+                "name": "LOGIC_STATE_FAN",
+                "range": null,
+                "title": "State of the fan",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": "!ON_OFF_AUTO",
+                "help": "Set the initial state of the heater when automatic light control is disabled.",
+                "id": "LOGIC_STATE_HEATER",
+                "name": "LOGIC_STATE_HEATER",
+                "range": null,
+                "title": "State of the heater",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": "!ON_OFF_AUTO",
+                "help": "Set the initial state of the heater when automatic light control is disabled.",
+                "id": "LOGIC_STATE_MOTOR",
+                "name": "LOGIC_STATE_MOTOR",
+                "range": null,
+                "title": "State of the motor",
+                "type": "int"
+            }
+        ],
+        "depends_on": null,
+        "id": "auto-configuration-menu",
+        "title": "Auto configuration menu",
+        "type": "menu"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Set gpio using ds18b20",
+                "id": "ONE_WIRE_GPIO",
+                "name": "ONE_WIRE_GPIO",
+                "range": null,
+                "title": "ONE_WIRE_GPIO",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Set gpio using light",
+                "id": "GPIO_LIGHT",
+                "name": "GPIO_LIGHT",
+                "range": null,
+                "title": "CONFIG_GPIO_LIGHT",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Set gpio using fan",
+                "id": "GPIO_FAN",
+                "name": "GPIO_FAN",
+                "range": null,
+                "title": "CONFIG_GPIO_FAN",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Set gpio using heater",
+                "id": "GPIO_HEATER",
+                "name": "GPIO_HEATER",
+                "range": null,
+                "title": "CONFIG_GPIO_HEATER",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Set gpio using servo",
+                "id": "GPIO_CHANNEL_MOTOR",
+                "name": "GPIO_CHANNEL_MOTOR",
+                "range": null,
+                "title": "GPIO_CHANNEL_MOTOR",
+                "type": "int"
+            }
+        ],
+        "depends_on": null,
+        "id": "gpio-configuration",
+        "title": "GPIO configuration",
         "type": "menu"
     },
     {
@@ -2193,6 +2414,19 @@
     },
     {
         "children": [
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Set up freq kHz",
+                "id": "I2C_MASTER_FREQ_HZ",
+                "name": "I2C_MASTER_FREQ_HZ",
+                "range": [
+                    0,
+                    400000
+                ],
+                "title": "I2C_MASTER_FREQ_HZ",
+                "type": "int"
+            },
             {
                 "children": [],
                 "depends_on": null,
