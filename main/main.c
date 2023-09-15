@@ -51,39 +51,6 @@
 #include "sdkconfig.h"
 
 /*------------------------------------------DEFINE--------------------------------------------*/
-
-// // Device using
-// #define CONFIG_USING_RTC            (1)
-// #define CONFIG_USING_BME280         (1)
-// #define CONFIG_USING_DS18B20        (1)
-// #define CONFIG_USING_SSD1306        (1)
-
-// // Wifi configuration Menu
-// #define CONFIG_SSID                 "unknown"
-// #define CONFIG_PASSWORD             "bat4glenmadung"
-// #define CONFIG_MAXIMUM_RETRY_CONNECT_WIFI (10)
-
-// // Auto configuration menu
-// #define CONFIG_ON_OFF_AUTO          (1)
-// #define CONFIG_HOUR_TURN_ON_MOTOR   (20)
-// #define CONFIG_HOUR_TURN_ON_LIGHT   (20)
-// #define CONFIG_TEMPERATURE_TURN_ON_FAN     (29)
-// #define CONFIG_TEMPERATURE_TURN_ON_HEATER  (25)
-// #define CONFIG_LOGIC_STATE_LIGHT          (1)
-// #define CONFIG_LOGIC_STATE_FAN            (0)
-// #define CONFIG_LOGIC_STATE_HEATER         (0)
-// #define CONFIG_LOGIC_STATE_MOTOR          (0)
-
-// // GPIO configuration
-// #define CONFIG_ONE_WIRE_GPIO (12)
-// #define CONFIG_GPIO_LIGHT    (32)
-// #define CONFIG_GPIO_FAN      (33)
-// #define CONFIG_GPIO_HEATER   (25)
-// #define CONFIG_GPIO_CHANNEL_MOTOR   (13)
-
-
-
-
 #define TAG_main  "Main"
 #define TAG_wifi  "Wifi"
 #define TAG_bme280 "BME280"
@@ -131,10 +98,6 @@ static int s_retry_num = 0 ;
 int center, top, bottom;
 char lineChar[20];
 
-// bool logicStateLight = CONFIG_LOGIC_STATE_LIGHT ;
-// bool logicStateFan = CONFIG_LOGIC_STATE_FAN ;
-// bool logicStateHeater = CONFIG_LOGIC_STATE_HEATER ;
-// bool logicStateMotor = CONFIG_LOGIC_STATE_MOTOR ;
 /*------------------------------------------------------------------------------------------------------------------------*/
 
 i2c_dev_t ds3231_device ;
