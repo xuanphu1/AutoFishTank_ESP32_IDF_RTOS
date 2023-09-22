@@ -43,6 +43,12 @@ menu "Wifi configuration Menu"
         help
             PASSWORD
 
+    config RTC_TIME_SYNC
+        bool "RTC_TIME_SYNC"
+        default y
+        help
+            Set up time with sync
+
     config MAXIMUM_RETRY_CONNECT_WIFI
         int "MAXIMUM_RETRY_CONNECT_WIFI"
         default 10
@@ -73,6 +79,14 @@ menu "Auto configuration menu"
         depends on ON_OFF_AUTO
         help
             Set the hour at which the light should be turned on when automatic control enabled
+
+    config  HOUR_TURN_OFF_LIGHT
+        int " HOUR_TURN_OFF_LIGHT"
+        default 23
+        range 0 23
+        depends on ON_OFF_AUTO
+        help 
+            Set the hour at which the light should be turned on when automatic control disabled
 
     config TEMPERATURE_TURN_ON_FAN
         int "TEMPERATURE_TURN_ON_FAN"
@@ -153,6 +167,12 @@ menu "GPIO configuration"
         default 13
         help
             Set gpio using servo
+
+    config GPIO_FILTER
+        int "CONFIG_GPIO_FILTER"
+        default 14
+        help
+            Set gpio using filter
 
 endmenu
 

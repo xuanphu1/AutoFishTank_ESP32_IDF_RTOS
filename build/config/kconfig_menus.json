@@ -2140,6 +2140,16 @@
             {
                 "children": [],
                 "depends_on": null,
+                "help": "Set up time with sync",
+                "id": "RTC_TIME_SYNC",
+                "name": "RTC_TIME_SYNC",
+                "range": null,
+                "title": "RTC_TIME_SYNC",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
                 "help": "Maximum number of reconnections wifi",
                 "id": "MAXIMUM_RETRY_CONNECT_WIFI",
                 "name": "MAXIMUM_RETRY_CONNECT_WIFI",
@@ -2181,6 +2191,19 @@
                             23
                         ],
                         "title": "HOUR_TURN_ON_LIGHT",
+                        "type": "int"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "ON_OFF_AUTO",
+                        "help": "Set the hour at which the light should be turned on when automatic control disabled",
+                        "id": "HOUR_TURN_OFF_LIGHT",
+                        "name": "HOUR_TURN_OFF_LIGHT",
+                        "range": [
+                            0,
+                            23
+                        ],
+                        "title": "HOUR_TURN_OFF_LIGHT",
                         "type": "int"
                     },
                     {
@@ -2308,6 +2331,16 @@
                 "name": "GPIO_CHANNEL_MOTOR",
                 "range": null,
                 "title": "GPIO_CHANNEL_MOTOR",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Set gpio using filter",
+                "id": "GPIO_FILTER",
+                "name": "GPIO_FILTER",
+                "range": null,
+                "title": "CONFIG_GPIO_FILTER",
                 "type": "int"
             }
         ],

@@ -76,6 +76,7 @@ $<TARGET_FILE:__idf_BME280>
 $<TARGET_FILE:__idf_DS3231>
 $<TARGET_FILE:__idf_DataManager>
 $<TARGET_FILE:__idf_DeviceManager>
+$<TARGET_FILE:__idf_SNTP_Sync>
 $<TARGET_FILE:__idf_Time>
 $<TARGET_FILE:__idf_esp32_owb>
 $<TARGET_FILE:__idf_esp32_ds18b20>

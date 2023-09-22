@@ -724,6 +724,13 @@ C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DeviceMana
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DeviceManager/CMakeFiles/install.dir
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DeviceManager/CMakeFiles/install/local.dir
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DeviceManager/CMakeFiles/install/strip.dir
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/SNTP_Sync/CMakeFiles/__idf_SNTP_Sync.dir
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/SNTP_Sync/CMakeFiles/edit_cache.dir
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/SNTP_Sync/CMakeFiles/rebuild_cache.dir
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/SNTP_Sync/CMakeFiles/list_install_components.dir
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/SNTP_Sync/CMakeFiles/install.dir
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/SNTP_Sync/CMakeFiles/install/local.dir
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/SNTP_Sync/CMakeFiles/install/strip.dir
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/Time/CMakeFiles/__idf_Time.dir
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/Time/CMakeFiles/edit_cache.dir
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/Time/CMakeFiles/rebuild_cache.dir
