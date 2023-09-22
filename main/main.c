@@ -660,4 +660,5 @@ xTaskCreate(getDataFromSensor_task,"Get data from sensor",(1024*16),NULL,(UBaseT
 xTaskCreate(allocateDatatoDisplayAndOnOffService_task,"Display data and turn on turn off service",(1024*16),NULL,(UBaseType_t)20,&allocateDatatoDisplay_task_handle);
 
 
+
 }
