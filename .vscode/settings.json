@@ -31,6 +31,8 @@
         "mqtt_client.h": "c",
         "iot_servo.h": "c",
         "*.inc": "c",
-        "sntp_sync.h": "c"
+        "sntp_sync.h": "c",
+        "esp_system.h": "c",
+        "mhz14a.h": "c"
     }
 }

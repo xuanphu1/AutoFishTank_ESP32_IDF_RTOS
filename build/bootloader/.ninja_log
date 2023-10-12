@@ -5,8 +5,8 @@
 406	1579	7160317703881516	esp-idf/soc/CMakeFiles/__idf_soc.dir/lldesc.c.obj	9bfab0f84050338e
 416	2205	7160317708651644	esp-idf/soc/CMakeFiles/__idf_soc.dir/soc_include_legacy_warn.c.obj	6231d35953b98097
 277	2609	7160317712396104	esp-idf/hal/CMakeFiles/__idf_hal.dir/cpu_hal.c.obj	baf3beaaad898268
-46	2360	7160317704231135	project_elf_src_esp32.c	c1ee7c9d7ad9cf24
 515	2933	7160317714015165	esp-idf/soc/CMakeFiles/__idf_soc.dir/esp32/i2c_periph.c.obj	efcf78fe4531b0b7
+46	2360	7160317704231135	project_elf_src_esp32.c	c1ee7c9d7ad9cf24
 15565	20046	7160317874191586	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/esp32/bootloader_sha.c.obj	f33bd61cd88974a8
 188	2306	7160317708931808	esp-idf/hal/CMakeFiles/__idf_hal.dir/efuse_hal.c.obj	2fd01d1b6c26ff1e
 12264	15563	7160317841372171	esp-idf/bootloader_support/CMakeFiles/__idf_bootloader_support.dir/src/bootloader_efuse.c.obj	5cdc95e0200468b
@@ -100,9 +100,9 @@
 64376	66608	7160318350924651	bootloader.elf	89fef5cf2eb84a02
 66821	70934	7160318393577980	.bin_timestamp	db838cb5d13600f0
 66821	70934	7160318393577980	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/.bin_timestamp	db838cb5d13600f0
-13	149	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
-13	149	0	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
-8	34251	7170762329282051	build.ninja	e77f17d5900945cc
-6	31310	7170762329282051	build.ninja	e77f17d5900945cc
-23	920	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
-23	920	0	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
+26	282	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
+26	282	0	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
+6	13983	7188198868741956	build.ninja	e77f17d5900945cc
+4	16567	7188198868741956	build.ninja	e77f17d5900945cc
+17	317	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
+17	317	0	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd

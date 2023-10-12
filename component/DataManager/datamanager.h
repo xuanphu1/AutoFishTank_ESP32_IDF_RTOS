@@ -15,16 +15,16 @@ struct dataSensor_st
     float pressure;
 
     float water_temperature;
-#if(0)
+#if(1)
     uint32_t pm1_0;
     uint32_t pm2_5;
     uint32_t pm10;
 #endif
-#if(0)
+#if(1)
     uint32_t CO2;
-    uint32_t NO;
-    uint32_t CO;
-    uint32_t SO2;
+    // uint32_t NO;
+    // uint32_t CO;
+    // uint32_t SO2;
 #endif
 };
 

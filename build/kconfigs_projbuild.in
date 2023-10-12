@@ -5,5 +5,7 @@ source "C:/Espressif/frameworks/esp-idf-v4.4.5/components/esptool_py/Kconfig.pro
 source "C:/Espressif/frameworks/esp-idf-v4.4.5/components/partition_table/Kconfig.projbuild"
 source "C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/main/Kconfig.projbuild"
 source "C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/component/BME280/Kconfig.projbuild"
+source "C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/component/MHZ14a/Kconfig.projbuild"
+source "C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/component/PMS7003/Kconfig.projbuild"
 source "C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/component/Time/Kconfig.projbuild"
 source "C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/component/ssd1306/Kconfig.projbuild"

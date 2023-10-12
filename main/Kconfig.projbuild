@@ -27,6 +27,18 @@ menu "Device using"
         default y
         help
             enabled or disabled using ssd1306
+
+    config USING_PMS7003
+        bool "USING_PMS7003"
+        default y
+        help 
+            enabled or disabled using pms7003
+
+    config USING_MHZ14A
+        bool "USING_MHZ14A"
+        default y
+        help 
+            enabled or disabled using mhz14a
 endmenu
     
     

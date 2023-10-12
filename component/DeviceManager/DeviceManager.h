@@ -41,6 +41,8 @@ struct moduleError_st
     esp_err_t ds3231Error;
     esp_err_t bme280Error;
     esp_err_t ds18b20Error;
+    esp_err_t pms7003Error;
+    esp_err_t mhz14aError;
 };
 
 

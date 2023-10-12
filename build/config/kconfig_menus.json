@@ -2108,6 +2108,26 @@
                 "range": null,
                 "title": "USING_SSD1306",
                 "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "enabled or disabled using pms7003",
+                "id": "USING_PMS7003",
+                "name": "USING_PMS7003",
+                "range": null,
+                "title": "USING_PMS7003",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "enabled or disabled using mhz14a",
+                "id": "USING_MHZ14A",
+                "name": "USING_MHZ14A",
+                "range": null,
+                "title": "USING_MHZ14A",
+                "type": "bool"
             }
         ],
         "depends_on": null,
@@ -2395,6 +2415,132 @@
         "depends_on": null,
         "id": "bme-configuration",
         "title": "BME configuration",
+        "type": "menu"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "GPIO number for PWM PIN.",
+                "id": "MHZ14A_PWM_PIN",
+                "name": "MHZ14A_PWM_PIN",
+                "range": null,
+                "title": "PMW PIN GPIO Number",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "Max size queue for store capture PWM.",
+                "id": "QUEUE_SIZE",
+                "name": "QUEUE_SIZE",
+                "range": null,
+                "title": "Max size queue",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "GPIO number for HD PIN, using for zero-point calibration(auto calibartion).",
+                "id": "HD_PIN",
+                "name": "HD_PIN",
+                "range": null,
+                "title": "HD PIIN GPIO number",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "GPIO number for TX.",
+                "id": "MHZ14A_PIN_TX",
+                "name": "MHZ14A_PIN_TX",
+                "range": null,
+                "title": "TX GPIO Number",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "GPIO number for RX.",
+                "id": "MHZ14A_PIN_RX",
+                "name": "MHZ14A_PIN_RX",
+                "range": null,
+                "title": "RX GPIO Number",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "UART baudrate.",
+                "id": "MHZ14A_UART_BAUD_RATE",
+                "name": "MHZ14A_UART_BAUD_RATE",
+                "range": null,
+                "title": "UART baudrate",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "UART port for PMS sensor.",
+                "id": "MHZ14A_UART_PORT",
+                "name": "MHZ14A_UART_PORT",
+                "range": null,
+                "title": "Uart Port",
+                "type": "int"
+            }
+        ],
+        "depends_on": null,
+        "id": "mhz14a-configuration",
+        "title": "MHZ14a configuration",
+        "type": "menu"
+    },
+    {
+        "children": [
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "GPIO number for TX.",
+                "id": "PMS_PIN_TX",
+                "name": "PMS_PIN_TX",
+                "range": null,
+                "title": "TX GPIO Number",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "GPIO number for RX.",
+                "id": "PMS_PIN_RX",
+                "name": "PMS_PIN_RX",
+                "range": null,
+                "title": "RX GPIO Number",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "UART baudrate.",
+                "id": "UART_BAUD_RATE",
+                "name": "UART_BAUD_RATE",
+                "range": null,
+                "title": "UART baudrate",
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "UART port for PMS sensor.",
+                "id": "PMS_UART_PORT",
+                "name": "PMS_UART_PORT",
+                "range": null,
+                "title": "Uart Port",
+                "type": "int"
+            }
+        ],
+        "depends_on": null,
+        "id": "pms7003-configuration",
+        "title": "PMS7003 configuration",
         "type": "menu"
     },
     {

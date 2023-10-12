@@ -76,6 +76,8 @@ C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/BME280/lib
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DS3231/libDS3231.a
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DataManager/libDataManager.a
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/DeviceManager/libDeviceManager.a
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/MHZ14a/libMHZ14a.a
+C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/PMS7003/libPMS7003.a
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/SNTP_Sync/libSNTP_Sync.a
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/Time/libTime.a
 C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/esp-idf/esp32_owb/libesp32_owb.a
