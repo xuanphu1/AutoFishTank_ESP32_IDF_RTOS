@@ -53,6 +53,7 @@
 #include "sdkconfig.h"
 #include "../component/PMS7003/pms7003.h"
 #include "mhz14a.h"
+#include "tft.h"
 
 /*------------------------------------------DEFINE--------------------------------------------*/
 #define TAG_main  "Main"
@@ -131,6 +132,8 @@ bmp280_t bme280_device ;
 bmp280_params_t bme280_params ;
 uart_config_t pms_uart_config = UART_CONFIG_DEFAULT();
 const DS18B20_Info *ds18b20_info;
+OneWireBus * owb;
+owb_rmt_driver_info rmt_driver_info;
 struct tm Time ;
 // struct tm Time = {
 //         .tm_year = 122, // (2022 - 1900)
@@ -349,10 +352,17 @@ static void sntp_app_start()
 void getDataFromSensor_task(void *argument){
     struct dataSensor_st dataSensorTemp = {0} ;
     struct moduleError_st moduleErrorTemp;
-    TickType_t task_lastWakeTime = xTaskGetTickCount();  
+    TickType_t task_lastWakeTime = xTaskGetTickCount();
+
+    // Khởi tạo cảm biến DS18B20
+    ds18b20_info = ds18b20_malloc();  // Cấp phát heap
+    ds18b20_init_solo(ds18b20_info, owb);            // Khởi tạo cảm biến (chỉ có một cảm biến)
+    ds18b20_use_crc(ds18b20_info, true);             // Bật kiểm tra CRC cho tất cả các lần đọc
+    ds18b20_set_resolution(ds18b20_info, DS18B20_RESOLUTION_12_BIT);  
     while (1)
     {
-
+    // if (xSemaphoreTake(allocateDataToMQTTandSDQueue_semaphore, portMAX_DELAY) == pdPASS)        
+    // {
 #if (CONFIG_USING_MHZ14A)
     moduleErrorTemp.mhz14aError = mhz14a_readDataViaPWM(&(dataSensorTemp.CO2));
     if (moduleErrorTemp.mhz14aError != ESP_OK){
@@ -381,31 +391,32 @@ void getDataFromSensor_task(void *argument){
 
 #if (CONFIG_USING_BME280)
     moduleErrorTemp.bme280Error = bme280_readSensorData(&bme280_device,&(dataSensorTemp.environment_temperature),
-                                                        &(dataSensorTemp.humidity),&(dataSensorTemp.pressure)); 
+                                                        &(dataSensorTemp.humidity),&(dataSensorTemp.pressure));
+    ESP_LOGI(TAG_bme280,"temp: %f humid: %f press: %f\n",dataSensorTemp.environment_temperature,dataSensorTemp.humidity,dataSensorTemp.pressure);                                                
 #endif
 #if (CONFIG_USING_DS18B20)
     moduleErrorTemp.ds18b20Error = ds18b20_convert_and_read_temp(ds18b20_info, &dataSensorTemp.water_temperature);
     if (moduleErrorTemp.ds18b20Error != ESP_OK) {
         ESP_LOGE(TAG_ds18b20,"Read data from DS18B20 failed") ;
     } else {
-        ESP_LOGI(TAG_ds18b20,"Read data from DS18B20 successfull");
+        ESP_LOGI(TAG_ds18b20,"Read data from DS18B20 successfull\n");
+        ESP_LOGI(TAG_ds18b20,"temp_water: %f\n",dataSensorTemp.water_temperature);
     }
 #endif
-
+    // }
+    // xSemaphoreGive(allocateDataToMQTTandSDQueue_semaphore);
     ESP_ERROR_CHECK_WITHOUT_ABORT(moduleErrorTemp.bme280Error);
     ESP_ERROR_CHECK_WITHOUT_ABORT(moduleErrorTemp.ds18b20Error);
 
     ESP_LOGI(__func__, "Read data from sensors completed!");
 
-    if (xSemaphoreTake(allocateDataToMQTTandSDQueue_semaphore, portMAX_DELAY) == pdPASS)        
-    {
+    
         if(xQueueSendToBack(dataSensorIntermediate_queue, (void *)&dataSensorTemp, WAIT_10_TICK * 5) != pdPASS){
             ESP_LOGE(__func__,"Failed to send the data sensor to dataSensorIntermidiate_queue");
         } else {
             ESP_LOGI(__func__,"Successfull to send the data sensor to dataSensorIntermidiate_queue");
         }
-    }
-    xSemaphoreGive(allocateDataToMQTTandSDQueue_semaphore);
+   
 
     if(xQueueSendToBack(dataSensorIntermediate_queue, (void *)&dataSensorTemp, WAIT_10_TICK * 5) != pdPASS){
             ESP_LOGE(__func__,"Failed to send the data sensor to dataSensorIntermidiate_queue");
@@ -730,16 +741,9 @@ ESP_ERROR_CHECK_WITHOUT_ABORT(iot_servo_init(LEDC_LOW_SPEED_MODE,&servo_config))
     esp_log_level_set("*", ESP_LOG_INFO);
 
     // Khởi tạo và cấu hình giao tiếp 1-Wire
-    owb_rmt_driver_info rmt_driver_info;
     ESP_LOGI(TAG_ds18b20,"Initialize DS18B20 sensor (one/Wire %d)",CONFIG_ONE_WIRE_GPIO);
-    OneWireBus * owb = owb_rmt_initialize(&rmt_driver_info, CONFIG_ONE_WIRE_GPIO, RMT_CHANNEL_1, RMT_CHANNEL_0);
+    owb = owb_rmt_initialize(&rmt_driver_info, CONFIG_ONE_WIRE_GPIO, RMT_CHANNEL_1, RMT_CHANNEL_0);
     owb_use_crc(owb, true);  // Bật kiểm tra CRC cho mã ROM
-
-    // Khởi tạo cảm biến DS18B20
-    ds18b20_info = ds18b20_malloc();  // Cấp phát heap
-    ds18b20_init_solo(ds18b20_info, owb);            // Khởi tạo cảm biến (chỉ có một cảm biến)
-    ds18b20_use_crc(ds18b20_info, true);             // Bật kiểm tra CRC cho tất cả các lần đọc
-    ds18b20_set_resolution(ds18b20_info, DS18B20_RESOLUTION_12_BIT);
 
 #endif
 

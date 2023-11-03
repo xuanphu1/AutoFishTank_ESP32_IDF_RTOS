@@ -100,9 +100,9 @@
 64376	66608	7160318350924651	bootloader.elf	89fef5cf2eb84a02
 66821	70934	7160318393577980	.bin_timestamp	db838cb5d13600f0
 66821	70934	7160318393577980	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/.bin_timestamp	db838cb5d13600f0
-26	282	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
-26	282	0	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
-6	13983	7188198868741956	build.ninja	e77f17d5900945cc
-4	16567	7188198868741956	build.ninja	e77f17d5900945cc
-17	317	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
-17	317	0	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
+13	128	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
+13	128	0	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
+5	14157	7204500074137790	build.ninja	e77f17d5900945cc
+5	13551	7204500074137790	build.ninja	e77f17d5900945cc
+18	256	0	esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
+18	256	0	C:/Espressif/frameworks/esp/AutoFishTank_ESP32_IDF_RTOS/build/bootloader/esp-idf/esptool_py/CMakeFiles/bootloader_check_size	c2beffbab4b81efd
